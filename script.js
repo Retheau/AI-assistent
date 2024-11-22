@@ -119,3 +119,100 @@ function loadTasks() {
 window.onload = loadTasks;
 
 // Add saveTasks() when deleting or adding tasks
+
+<div id="calendar"></div>
+<input type="text" id="taskInput" placeholder="Add a task for this day">
+<button onclick="addTaskToDate()">Add Task</button>
+<ul id="taskListForDate"></ul>
+
+// Function to generate the calendar
+function generateCalendar() {
+    const calendar = document.getElementById('calendar');
+    const date = new Date();
+    const month = date.getMonth();
+    const year = date.getFullYear();
+    const firstDay = new Date(year, month, 1).getDay();
+    const lastDate = new Date(year, month + 1, 0).getDate();
+
+    let calendarHTML = "<table>";
+    calendarHTML += "<thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead>";
+    calendarHTML += "<tbody><tr>";
+
+    // Empty cells before the first day of the month
+    for (let i = 0; i < firstDay; i++) {
+        calendarHTML += "<td></td>";
+    }
+
+    // Days of the month
+    for (let day = 1; day <= lastDate; day++) {
+        const currentDate = `${year}-${month + 1}-${day}`;
+        calendarHTML += `<td onclick="selectDate('${currentDate}')">${day}</td>`;
+        if ((firstDay + day) % 7 === 0) {
+            calendarHTML += "</tr><tr>"; // Start a new row at the end of the week
+        }
+    }
+
+    calendarHTML += "</tr></tbody></table>";
+    calendar.innerHTML = calendarHTML;
+}
+
+// Function to select a date and show tasks for that date
+function selectDate(date) {
+    const taskList = document.getElementById('taskListForDate');
+    taskList.innerHTML = `Tasks for ${date}:`; // Display selected date
+    currentSelectedDate = date; // Store selected date
+}
+
+// Function to add a task to the selected date
+function addTaskToDate() {
+    const taskInput = document.getElementById('taskInput');
+    const taskText = taskInput.value.trim();
+    if (taskText === "") return;
+
+    const taskList = document.getElementById('taskListForDate');
+    const li = document.createElement('li');
+    li.textContent = taskText;
+    taskList.appendChild(li);
+    taskInput.value = ""; // Clear input after adding the task
+}
+
+let currentSelectedDate = '';
+generateCalendar(); // Call to display the calendar when the page loads
+
+<div>
+    <h3>Get Personalized Tips</h3>
+    <button onclick="getPersonalizedTip('study')">Study Tips</button>
+    <button onclick="getPersonalizedTip('health')">Health Tips</button>
+    <button onclick="getPersonalizedTip('productivity')">Productivity Tips</button>
+    <div id="tipDisplay"></div>
+</div>
+
+// Array of tips categorized
+const tips = {
+    study: [
+        "Use active recall when studying.",
+        "Review notes immediately after class.",
+        "Try the Pomodoro technique for focus."
+    ],
+    health: [
+        "Drink water regularly.",
+        "Exercise for at least 30 minutes a day.",
+        "Get 7-9 hours of sleep every night."
+    ],
+    productivity: [
+        "Plan your day the night before.",
+        "Avoid multitasking to stay focused.",
+        "Take breaks every 25 minutes."
+    ]
+};
+
+// Function to get a random tip from a category
+function getPersonalizedTip(category) {
+    const categoryTips = tips[category];
+    if (categoryTips) {
+        const randomTip = categoryTips[Math.floor(Math.random() * categoryTips.length)];
+        document.getElementById('tipDisplay').textContent = randomTip;
+    } else {
+        document.getElementById('tipDisplay').textContent = "No tips available for this category.";
+    }
+}
