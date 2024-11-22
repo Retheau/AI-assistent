@@ -74,3 +74,48 @@ function addTask() {
     taskInput.value = ""; // Clear the input after adding the task
 }
 
+function setReminder(message, timeInSeconds) {
+    setTimeout(() => {
+        alert(`Reminder: ${message}`);
+    }, timeInSeconds * 1000); // Time in milliseconds
+}
+
+// Example usage: Remind in 10 seconds
+setReminder("Don't forget to take a break!", 10);
+
+<select id="taskCategory">
+    <option value="work">Work</option>
+    <option value="study">Study</option>
+    <option value="personal">Personal</option>
+</select>
+
+// Save tasks to localStorage
+function saveTasks() {
+    const tasks = [];
+    document.querySelectorAll('#taskList li').forEach((li) => {
+        tasks.push(li.textContent.replace('Delete', '').trim());
+    });
+    localStorage.setItem('tasks', JSON.stringify(tasks));
+}
+
+// Load tasks from localStorage
+function loadTasks() {
+    const tasks = JSON.parse(localStorage.getItem('tasks') || '[]');
+    tasks.forEach((task) => {
+        const li = document.createElement('li');
+        li.textContent = task;
+        const deleteBtn = document.createElement('button');
+        deleteBtn.textContent = 'Delete';
+        deleteBtn.onclick = function () {
+            taskList.removeChild(li);
+            saveTasks();
+        };
+        li.appendChild(deleteBtn);
+        taskList.appendChild(li);
+    });
+}
+
+// Call loadTasks on page load to populate the list
+window.onload = loadTasks;
+
+// Add saveTasks() when deleting or adding tasks
