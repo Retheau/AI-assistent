@@ -45,4 +45,32 @@ function addTask() {
 
     taskInput.value = ""; // Clear the input after adding
 }
+function addTask() {
+    const taskInput = document.getElementById('taskInput');
+    const taskText = taskInput.value.trim(); // Get the input value
+    if (taskText === "") return; // Prevent adding empty tasks
+
+    const taskList = document.getElementById('taskList');
+
+    // Create a new list item
+    const li = document.createElement('li');
+    li.textContent = taskText;
+
+    // Mark as done when clicked
+    li.onclick = function () {
+        li.style.textDecoration = li.style.textDecoration === "line-through" ? "" : "line-through";
+    };
+
+    // Add a delete button to the task
+    const deleteBtn = document.createElement('button');
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.onclick = function () {
+        taskList.removeChild(li); // Remove the task from the list
+    };
+
+    li.appendChild(deleteBtn); // Add the delete button to the list item
+    taskList.appendChild(li);   // Add the list item to the task list
+
+    taskInput.value = ""; // Clear the input after adding the task
+}
 
